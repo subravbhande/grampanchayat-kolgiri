@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://dpg-d5amdo63jp1c73cnl610-a:5432/smartvillage_7jkj
-    username: smartvillage_7jkj_user
-    password: uTfAjKCQedP2Ah0IiEIjBzzdjPo6XTEJ
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
@@ -16,9 +16,9 @@ spring:
         format_sql: true
 
 firebase:
-  config-path: firebase-service-account.json
+  config-path: ${FIREBASE_CONFIG_PATH}
 
 cloudinary:
-  cloud-name: dafpxavqy
-  api-key: 888331834121249
-  api-secret: MtQk9DatzuXvyd50a6dEZhc6Jeo
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
