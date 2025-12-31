@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://dpg-d5amdo63jp1c73cnl610-a:5432/smartvillage_7jkj
+    username: smartvillage_7jkj_user
+    password: uTfAjKCQedP2Ah0IiEIjBzzdjPo6XTEJ
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+firebase:
+  config-path: firebase-service-account.json
+
+cloudinary:
+  cloud-name: dafpxavqy
+  api-key: 888331834121249
+  api-secret: MtQk9DatzuXvyd50a6dEZhc6Jeo
