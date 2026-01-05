@@ -6,6 +6,7 @@ import com.smartvillage.smart_village_backend.entity.Role;
 import com.smartvillage.smart_village_backend.entity.User;
 import com.smartvillage.smart_village_backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
 @Service
 public class UserService {
 
@@ -22,34 +23,37 @@ public class UserService {
         return userRepository.findByFirebaseUid(firebaseUid)
                 .orElseThrow(() -> new RuntimeException("User not registered"));
     }
-    public FirebaseToken verifyToken(String token) {
-        return firebaseTokenService.verifyToken(token);
-    }
+
     public void assertAdmin(String firebaseUid) {
         User user = getCurrentUser(firebaseUid);
-        if (!user.getRole().name().equals("ADMIN")) {
+        if (user.getRole() != Role.ADMIN) {
             throw new RuntimeException("Admin access required");
         }
     }
 
-
-
     public void registerUser(String authHeader, RegisterRequest request) {
 
-        String token = authHeader.replace("Bearer ", "");
-        FirebaseToken firebaseToken = firebaseTokenService.verifyToken(token);
-        String uid = firebaseToken.getUid();
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Missing or invalid Authorization header");
+        }
 
-        // prevent duplicate insert
-        if (userRepository.findByFirebaseUid(uid).isPresent()) {
-            return;
+        String token = authHeader.substring(7);
+        FirebaseToken firebaseToken = firebaseTokenService.verifyToken(token);
+        String uidFromToken = firebaseToken.getUid();
+
+        if (!uidFromToken.equals(request.getUid())) {
+            throw new RuntimeException("UID mismatch");
+        }
+
+        if (userRepository.findByFirebaseUid(uidFromToken).isPresent()) {
+            throw new RuntimeException("User already registered");
         }
 
         User user = new User();
         user.setName(request.getName());
         user.setMobile(request.getMobile());
         user.setEmail(request.getEmail());
-        user.setFirebaseUid(uid);
+        user.setFirebaseUid(uidFromToken);
         user.setRole(Role.CITIZEN);
 
         userRepository.save(user);
