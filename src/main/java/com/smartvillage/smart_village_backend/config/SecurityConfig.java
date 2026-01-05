@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/users/register").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -73,7 +73,6 @@ public class SecurityConfig {
 
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     } catch (Exception e) {
-                        // IMPORTANT: do NOT block here
                         SecurityContextHolder.clearContext();
                     }
                 }

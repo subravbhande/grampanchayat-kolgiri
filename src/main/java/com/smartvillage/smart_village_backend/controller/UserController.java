@@ -23,7 +23,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(
-            @RequestHeader("Authorization") String authHeader,
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
             @Valid @RequestBody RegisterRequest request) {
 
         userService.registerUser(authHeader, request);
@@ -40,6 +40,4 @@ public class UserController {
                 userService.getCurrentUser(firebaseToken.getUid())
         );
     }
-
 }
-
