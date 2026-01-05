@@ -6,7 +6,9 @@ import com.google.firebase.FirebaseOptions;
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class FirebaseConfig {
@@ -14,13 +16,14 @@ public class FirebaseConfig {
     @PostConstruct
     public void initFirebase() {
         try {
-            InputStream serviceAccount =
-                    getClass().getClassLoader()
-                            .getResourceAsStream("firebase-service-account.json");
+            String firebaseJson = System.getenv("FIREBASE_SERVICE_ACCOUNT_JSON");
 
-            if (serviceAccount == null) {
-                throw new RuntimeException("firebase-service-account.json not found");
+            if (firebaseJson == null || firebaseJson.isBlank()) {
+                throw new RuntimeException("FIREBASE_SERVICE_ACCOUNT_JSON not set");
             }
+
+            InputStream serviceAccount =
+                    new ByteArrayInputStream(firebaseJson.getBytes(StandardCharsets.UTF_8));
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
@@ -29,6 +32,7 @@ public class FirebaseConfig {
             if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
             }
+
         } catch (Exception e) {
             throw new RuntimeException("Firebase initialization failed", e);
         }

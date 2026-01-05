@@ -13,9 +13,6 @@ spring:
       ddl-auto: update
     show-sql: true
 
-firebase:
-  config-path: ${FIREBASE_CONFIG_PATH}
-
 cloudinary:
   cloud-name: ${CLOUDINARY_CLOUD_NAME}
   api-key: ${CLOUDINARY_API_KEY}
