@@ -31,7 +31,7 @@ public class UserService {
         }
     }
 
-    public void registerUser(String authHeader, RegisterRequest request) {
+    ppublic void registerUser(String authHeader, RegisterRequest request) {
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new RuntimeException("Missing or invalid Authorization header");
@@ -39,13 +39,9 @@ public class UserService {
 
         String token = authHeader.substring(7);
         FirebaseToken firebaseToken = firebaseTokenService.verifyToken(token);
-        String uidFromToken = firebaseToken.getUid();
+        String uid = firebaseToken.getUid();
 
-        if (!uidFromToken.equals(request.getUid())) {
-            throw new RuntimeException("UID mismatch");
-        }
-
-        if (userRepository.findByFirebaseUid(uidFromToken).isPresent()) {
+        if (userRepository.findByFirebaseUid(uid).isPresent()) {
             throw new RuntimeException("User already registered");
         }
 
@@ -53,9 +49,10 @@ public class UserService {
         user.setName(request.getName());
         user.setMobile(request.getMobile());
         user.setEmail(request.getEmail());
-        user.setFirebaseUid(uidFromToken);
+        user.setFirebaseUid(uid);
         user.setRole(Role.CITIZEN);
 
         userRepository.save(user);
     }
+
 }
