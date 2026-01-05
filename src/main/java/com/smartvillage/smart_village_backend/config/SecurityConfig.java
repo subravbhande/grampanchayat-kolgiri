@@ -36,9 +36,10 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
 
-                // IMPORTANT: disable default security
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
+                        .anyRequest().authenticated()
                 )
 
                 .addFilterBefore(firebaseFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -72,8 +73,8 @@ public class SecurityConfig {
 
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     } catch (Exception e) {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        return;
+                        // IMPORTANT: do NOT block here
+                        SecurityContextHolder.clearContext();
                     }
                 }
 
