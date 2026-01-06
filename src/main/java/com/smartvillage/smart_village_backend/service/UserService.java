@@ -31,10 +31,10 @@ public class UserService {
         }
     }
 
-    ppublic void registerUser(String authHeader, RegisterRequest request) {
+    public void registerUser(String authHeader, RegisterRequest request) {
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new RuntimeException("Missing or invalid Authorization header");
+            throw new RuntimeException("Missing Authorization header");
         }
 
         String token = authHeader.substring(7);
@@ -54,5 +54,4 @@ public class UserService {
 
         userRepository.save(user);
     }
-
 }
