@@ -32,6 +32,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+                .cors(cors -> {})   // 🔴 THIS WAS MISSING
                 .csrf(csrf -> csrf.disable())
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
@@ -46,6 +47,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
     @Bean
     public OncePerRequestFilter firebaseFilter() {
