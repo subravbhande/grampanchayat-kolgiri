@@ -14,16 +14,27 @@ public class CorsConfig {
 
         CorsConfiguration config = new CorsConfiguration();
 
+        // Frontend origins only
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
-                "https://grampanchayat-kolgiri.vercel.app"
+                "https://grampanchayat-kolgiri-f.vercel.app"
         ));
 
         config.setAllowedMethods(List.of(
-                "GET", "POST", "PUT", "DELETE", "OPTIONS"
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
         ));
 
-        config.setAllowedHeaders(List.of("*"));
+        // IMPORTANT for Authorization header
+        config.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type"
+        ));
+
+        config.setExposedHeaders(List.of("Authorization"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source =
