@@ -32,23 +32,32 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                // ✅ REQUIRED for browser requests
+                // ✅ Enable CORS
                 .cors(cors -> {})
 
+                // ❌ Disable default auth mechanisms
                 .csrf(csrf -> csrf.disable())
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/users/register",
-                                "/api/users/login"
-                        ).permitAll()
+                        // ✅ Public endpoint (token still sent from frontend)
+                        .requestMatchers("/api/users/register").permitAll()
+
+                        // ✅ Must be authenticated
+                        .requestMatchers("/api/users/me").authenticated()
+
+                        // ✅ Optional
                         .requestMatchers("/actuator/**").permitAll()
+
+                        // 🔒 Everything else secured
                         .anyRequest().authenticated()
                 )
 
-                .addFilterBefore(firebaseFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(
+                        firebaseFilter(),
+                        UsernamePasswordAuthenticationFilter.class
+                );
 
         return http.build();
     }
@@ -77,7 +86,9 @@ public class SecurityConfig {
                                         Collections.emptyList()
                                 );
 
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                        SecurityContextHolder.getContext()
+                                .setAuthentication(authentication);
+
                     } catch (Exception e) {
                         SecurityContextHolder.clearContext();
                     }
