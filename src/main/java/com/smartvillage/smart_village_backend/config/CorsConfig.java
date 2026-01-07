@@ -17,8 +17,9 @@ public class CorsConfig {
         // Frontend origins only
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
-                "https://grampanchayat-kolgiri-f.vercel.app"
+                "https://grampanchayat-kolgiri.vercel.app"
         ));
+        //https://grampanchayat-kolgiri-f.vercel.app/
 
         config.setAllowedMethods(List.of(
                 "GET",
